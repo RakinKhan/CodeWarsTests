@@ -1,38 +1,101 @@
 let doneOrNot = (board) => {
     let sudokuBoard = board
-    let zeros = 0
+    let nonInt = 0
+    let outOfBounds = 0
     let repeats = 0
+    let length = 0
+    let sameRow = 0
+    let misOrder = 0
+    let block = []   
+    let blockRow = []
+    let blockRow2 =[]
+    let blockRow3 = []
+    let blockRow4 = []
+    let blockRow5 = []
+    let blockRow6 = []
+    let blockRow7 = []
+    let blockRow8 = []
+    let blockRow9 = []
+
     sudokuBoard.forEach((item) => {
+        if (item.length !== 9) {
+            length = length + 1
+        }
+        for (let i = 0; i <sudokuBoard.length; i++) {
+            if ((JSON.stringify(item) === JSON.stringify(sudokuBoard[i])) && (item !== sudokuBoard[i])) {
+                sameRow = sameRow + 1
+            }
+            if ((i >=0 && i <=2) && sudokuBoard[i] === item) {
+                let indivline = sudokuBoard[i]
+                for (let i = 0; i < indivline.length; i++) {
+                    if (i >= 0 && i <= 2) {
+                        blockRow.push(indivline[i])
+                    } else if (i >= 3 && i <= 5) {
+                        blockRow2.push(indivline[i])
+                    } else if(i >= 6 && i <= 8) {
+                        blockRow3.push(indivline[i])
+                    }  
+                }                
+            } else if ((i >=3 && i <=5) && sudokuBoard[i] === item) {
+                let indivline = sudokuBoard[i]
+                for (let i = 0; i < indivline.length; i++) {
+                    if (i >= 0 && i <= 2) {
+                        blockRow4.push(indivline[i])
+                    } else if (i >= 3 && i <= 5) {
+                        blockRow5.push(indivline[i])
+                    } else if(i >= 6 && i <= 8) {
+                        blockRow6.push(indivline[i])
+                    }  
+                }                
+            } else if ((i >=6 && i <=8) && sudokuBoard[i] === item) {
+                let indivline = sudokuBoard[i]
+                for (let i = 0; i < indivline.length; i++) {
+                    if (i >= 0 && i <= 2) {
+                        blockRow7.push(indivline[i])
+                    } else if (i >= 3 && i <= 5) {
+                        blockRow8.push(indivline[i])
+                    } else if(i >= 6 && i <= 8) {
+                        blockRow9.push(indivline[i])
+                    }  
+                }                
+            }
+        }
+    })
+
+    block.push(blockRow,blockRow2,blockRow3,blockRow4,blockRow5,blockRow6,blockRow7,blockRow8,blockRow9)
+
+    block.forEach((item) => {
+        for (i = 0; i < item.length; i ++) {
+            if ((JSON.stringify(item) === JSON.stringify(block[i])) && (item !== block[i])) {
+                sameRow = sameRow + 1
+            }
+        }   
+    })
+    block.forEach((item) => {
         item.sort((a,b) => {
             return a - b
         })
         item.forEach((digit) => {
-            if (digit === 0) {
-                zeros = zeros + 1
+            if (!Number.isInteger(digit)) {
+                nonInt = nonInt + 1
+            } else if (digit <= 0 || digit >= 10) {
+                outOfBounds = outOfBounds + 1
             }
         })
         for (i = 0; i < item.length; i ++) {
             if (item[i] === item[i + 1]) {
                 repeats = repeats + 1
             }
-        }
+        }    
     })
-    
-    if (zeros !== 0 || repeats !== 0) {
+
+    if (sameRow !== 0) {
         return 'Try again!'
-    } else if (zeros === 0 && repeats === 0){
-        return 'Finished!'
+    } else if ((nonInt !== 0 || length !== 0) || (repeats !== 0 || outOfBounds !== 0)) {
+        return 'Try again!'
     } else {
-        return 'Try again!'
-    }
+        return 'Finished!'
+     }
 }
 
-console.log(doneOrNot([[5, 3, 4, 6, 7, 8, 9, 1, 2], 
-    [6, 7, 2, 1, 9, 0, 3, 4, 9],
-    [1, 0, 0, 3, 4, 2, 5, 6, 0],
-    [8, 5, 9, 7, 6, 1, 0, 2, 0],
-    [4, 2, 6, 8, 5, 3, 7, 9, 1],
-    [7, 1, 3, 9, 2, 4, 8, 5, 6],
-    [9, 0, 1, 5, 3, 7, 2, 1, 4],
-    [2, 8, 7, 4, 1, 9, 6, 3, 5],
-    [3, 0, 0, 4, 8, 1, 1, 7, 9]]))
+console.log(doneOrNot())
